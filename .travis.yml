@@ -1,0 +1,24 @@
+sudo: required
+services:
+        - docker
+
+before_install:
+        - docker build -t sihonglu/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+        - docker run sihonglu/react-test npm test -- --coverage
+
+after_success:
+        - docker build -t sihonglu/multi-client ./client
+        - docker build -t sihonglu/multi-nginx ./nginx
+        - docker build -t sihonglu/multi-server ./server
+        - docker build -t sihonglu/multi-worker ./worker
+        #Login to docker CLI
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+        # Push to docker hub
+        - docker push sihonglu/multi-client
+        - docker push sihonglu/multi-nginx
+        - docker push sihonglu/multi-server
+        - docker push sihonglu/multi-worker
+        
+
