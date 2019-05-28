@@ -20,5 +20,17 @@ after_success:
         - docker push sihonglu/multi-nginx
         - docker push sihonglu/multi-server
         - docker push sihonglu/multi-worker
-        
+       
+deploy:
+        provider: elasticbeanstalk
+        region: ap-southeast-1
+        app: multi-docker
+        env: MultiDocker-env
+        bucket_name: elasticbeanstalk-ap-southeast-1-853207176078
+        bucket_path: docker-multi
+        on:
+                branch: master
+        access_key_id: $AWS_ACCESS_KEY
+        secret_access_key:
+                secure: $AWS_SECRET_KEY 
 
